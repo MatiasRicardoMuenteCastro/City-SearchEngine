@@ -127,6 +127,15 @@ def population():
     except:
         return json.dumps({"error":"JSON mal formatado"}),400
     
+    searchCity["UF"] = searchCity["UF"].strip()
+    searchCity["cidade"] = searchCity["cidade"].strip()
+
+    if searchCity["cidade"] == "":
+        return json.dumps({"error":"Digite o nome de um município"}),400
+    
+    if searchCity["UF"] == "":
+        return json.dumps({"error":"Digie uma UF"}),400
+
     populationDF = pd.read_excel("./backend/src/Dataset/População.xlsx")
 
     UFDataset = populationDF.query("UF == '"+searchCity["UF"]+"'").reset_index(drop = True)
@@ -156,6 +165,11 @@ def imagesCity():
     except:
         return json.dumps({"error":"JSON mal formatado"}),40
 
+    searchCity["cidade"] = searchCity["cidade"].strip()
+
+    if searchCity["cidade"] == "":
+        return json.dumps({"error":"Digite o nome de um município"}),400
+    
     search = searchCity["cidade"]
 
     imageLink = requests.get(f"https://serpapi.com/search.json?engine=google&q=Imagem+de+"+search+"&location=Brazil&google_domain=google.com.br&gl=br&hl=pt&api_key="+API_KEY)
