@@ -61,8 +61,15 @@ def searcEngine():
     differenceArray = np.asarray(differenceArray)
 
     response = UFDataset["Nome do Municipio"][differenceArray.argmax()]
-
-    return json.dumps({"UF":searchCity["UF"],"Success":response})
+    
+    line = 0
+    CodMunic = 0
+    for i in UFDataset["Nome do Municipio"]:
+        if i == response:
+            CodMunic = UFDataset["Cod.Munic"][line]
+        line = line+1
+    
+    return json.dumps({"UF":searchCity["UF"],"Cod_Municipio":int(CodMunic),"Municipio":response})
 
 @searchBP.route("/events",methods = ["GET"])            
 def events():
@@ -123,31 +130,33 @@ def population():
 
     try:
         searchCity["UF"]
-        searchCity["cidade"]
+        searchCity["Cod_Municipio"]
     except:
         return json.dumps({"error":"JSON mal formatado"}),400
     
     searchCity["UF"] = searchCity["UF"].strip()
-    searchCity["cidade"] = searchCity["cidade"].strip()
+    searchCity["Cod_Municipio"] = searchCity["Cod_Municipio"].strip()
 
-    if searchCity["cidade"] == "":
+    if searchCity["Cod_Municipio"] == "":
         return json.dumps({"error":"Digite o nome de um município"}),400
     
     if searchCity["UF"] == "":
         return json.dumps({"error":"Digie uma UF"}),400
 
-    populationDF = pd.read_excel("./backend/src/Dataset/População.xlsx")
+    populationDF = pd.read_csv("./backend/src/Dataset/População.csv", sep = ";")
 
     UFDataset = populationDF.query("UF == '"+searchCity["UF"]+"'").reset_index(drop = True)
 
     if UFDataset.shape[0] == 0:
-        return json.dumps({"error":"Municipio não encontrado"}),404
+        return json.dumps({"error":"Estado não encontrado"}),404
     
     line = 0
     searchBool = False
 
-    for i in UFDataset["NOME DO MUNICÍPIO"]:
-        if i == searchCity["cidade"]:
+    Cod_Muni = int(searchCity["Cod_Municipio"])
+
+    for i in UFDataset["COD. MUNIC"]:
+        if i == Cod_Muni:
             searchBool = True
             population = UFDataset["POPULAÇÃO ESTIMADA"][line]
             return json.dumps({"success": population}),200
