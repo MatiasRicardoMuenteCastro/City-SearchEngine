@@ -138,12 +138,12 @@ def population():
     searchCity["Cod_Municipio"] = searchCity["Cod_Municipio"].strip()
 
     if searchCity["Cod_Municipio"] == "":
-        return json.dumps({"error":"Digite o nome de um município"}),400
+        return json.dumps({"error":"Digite o código de um município"}),400
     
     if searchCity["UF"] == "":
         return json.dumps({"error":"Digie uma UF"}),400
 
-    populationDF = pd.read_csv("./backend/src/Dataset/População.csv", sep = ";")
+    populationDF = pd.read_csv("./backend/src/Dataset/População.csv", sep = ",")
 
     UFDataset = populationDF.query("UF == '"+searchCity["UF"]+"'").reset_index(drop = True)
 
