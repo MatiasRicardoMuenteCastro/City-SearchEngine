@@ -16,7 +16,7 @@ API_KEY = "c1d6039b74a493383fd998725a89b7ac2a331ebc23d4aaeba94700b0b8dc0c1a"
 
 searchBP = Blueprint('search',__name__)
 
-@searchBP.route("/search",methods = ["GET"])
+@searchBP.route("/search",methods = ["POST"])
 def searcEngine():
 
     searchCity = request.get_json(force=True)
@@ -75,7 +75,7 @@ def searcEngine():
     
     return json.dumps({"UF":searchCity["UF"],"Cod_Municipio":int(CodMunic),"Municipio":response})
 
-@searchBP.route("/events",methods = ["GET"])            
+@searchBP.route("/events",methods = ["POST"])            
 def events():
 
     searchCity = request.get_json(force = True)
@@ -128,7 +128,7 @@ def places():
     
     return json.dumps({"lugares":results["local_results"]}),200
     
-@searchBP.route("/population",methods = ["GET"])
+@searchBP.route("/population",methods = ["POST"])
 def population():
     searchCity = request.get_json(force=True)
 
@@ -169,7 +169,7 @@ def population():
     if searchBool == False:
         return json.dumps({"error":"A cidade digitada não foi encontrada"}),404
 
-@searchBP.route("/city-image",methods = ["GET"])
+@searchBP.route("/city-image",methods = ["POST"])
 def imagesCity():
     searchCity = request.get_json(force=True)
 
@@ -201,7 +201,7 @@ def imagesCity():
     return json.dumps({"success":sendImage}),200
 
 
-@searchBP.route("/weather", methods = ["GET"])
+@searchBP.route("/weather", methods = ["POST"])
 def weather():
     searchCity = request.get_json(force=True)
 
@@ -226,7 +226,7 @@ def weather():
     except:
         return json.dumps({"error":"O clima dessa cidade não foi encontrado"})
 
-@searchBP.route("/safety",methods = ["GET"])
+@searchBP.route("/safety",methods = ["POST"])
 def safety():
     city = request.get_json(force=True)
     try:
