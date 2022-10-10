@@ -16,26 +16,11 @@ API_KEY = "c1d6039b74a493383fd998725a89b7ac2a331ebc23d4aaeba94700b0b8dc0c1a"
 
 searchBP = Blueprint('search',__name__)
 
-@searchBP.route("/search",methods = ["POST"])
-def searcEngine():
+@searchBP.route("/search/<UF>/<cidade>",methods = ["GET"])
+def searcEngine(UF,cidade):
 
-    searchCity = request.get_json(force=True)
+    searchCity = {"UF":UF,"cidade":cidade}
 
-    try:
-        searchCity["UF"]
-        searchCity["cidade"]
-    except:
-        return json.dumps({"error":"JSON mal formatado"}),400
-    
-
-    searchCity["cidade"] = searchCity["cidade"].strip()
-    
-    if searchCity["UF"] == "":
-        return json.dumps({"error":"Selecione um estado"}),400
-    
-    if searchCity["cidade"] == "":
-        return json.dumps({"error":"Digite o nome de um município"}),400
-    
     municipiosDF = pd.read_excel(diretorio+"/Dataset/Municipios.xlsx")
     
     UFDataset = municipiosDF.query("UF == '"+searchCity["UF"]+"'").reset_index(drop = True)
@@ -75,20 +60,10 @@ def searcEngine():
     
     return json.dumps({"UF":searchCity["UF"],"Cod_Municipio":int(CodMunic),"Municipio":response})
 
-@searchBP.route("/events",methods = ["POST"])            
-def events():
+@searchBP.route("/events/<cidade>",methods = ["GET"])            
+def events(cidade):
 
-    searchCity = request.get_json(force = True)
-    
-    try:
-        searchCity["cidade"]
-    except:
-        return json.dumps({"error":"JSON mal formatado"}),400
-
-    searchCity["cidade"] = searchCity["cidade"].strip()
-
-    if searchCity["cidade"] == "":
-        return json.dumps({"error":"Digite o nome de um município"}),400
+    searchCity = {"cidade":cidade}
 
     try:
         response = requests.get("https://serpapi.com/search.json?engine=google&q=Evento+em+"+searchCity["cidade"]+"&location=Brazil&google_domain=google.com.br&gl=br&hl=pt&api_key="+API_KEY)
@@ -100,53 +75,25 @@ def events():
     
     return json.dumps(jsonReturn),200
 
-@searchBP.route("/places",methods = ["POST"])
-def places():
-    searchCity = request.get_json(force = True)
-    searchLocal = request.get_json(force = True)
+@searchBP.route("/places/<cidade>/<local>",methods = ["GET"])
+def places(cidade, local):
+    searchCity = {"cidade":cidade}
+    searchLocal = {"searchLocal":local}
 
     try:
-        searchCity["cidade"]
-        searchLocal["searchLocal"]
+        response = requests.get(f"https://serpapi.com/search.json?engine=google_maps&q="+searchLocal["searchLocal"]+" em "+searchCity["cidade"]+"&google_domain=google.com&hl=pt&type=search&api_key="+API_KEY)
+        results = response.json()
+        results = results["local_results"]
     except:
-        return json.dumps({"error":"JSON mal formatado"}),400
-
-    searchCity["cidade"] = searchCity["cidade"].strip()
-    searchCity["searchLocal"] = searchCity["searchLocal"].strip()
-
-    if searchCity["cidade"] == "":
-        return json.dumps({"error":"Digite o nome de um município"}),400
-    
-    if searchCity["searchLocal"] == "":
-        return json.dumps({"error":"Digite algum local que deseja vistar (Ex: Restaurantes, Praças ou Museus)"}),400
-
-    response = requests.get(f"https://serpapi.com/search.json?engine=google_maps&q="+searchLocal["searchLocal"]+" em "+searchCity["cidade"]+"&google_domain=google.com&hl=pt&type=search&api_key="+API_KEY)
-    results = response.json()
-
-    if results.get("error") != None:
         return json.dumps({"error":"Não foi encontrado nenhum "+searchLocal["searchLocal"]+" em "+searchCity["cidade"]}),404
     
-    return json.dumps({"lugares":results["local_results"]}),200
+    return json.dumps(results),200
     
-@searchBP.route("/population",methods = ["POST"])
-def population():
-    searchCity = request.get_json(force=True)
+@searchBP.route("/population/<UF>/<Cod_Municipio>",methods = ["GET"])
+def population(UF,Cod_Municipio):
 
-    try:
-        searchCity["UF"]
-        searchCity["Cod_Municipio"]
-    except:
-        return json.dumps({"error":"JSON mal formatado"}),400
+    searchCity = {"UF":UF, "Cod_Municipio": Cod_Municipio}
     
-    searchCity["UF"] = searchCity["UF"].strip()
-    searchCity["Cod_Municipio"] = searchCity["Cod_Municipio"].strip()
-
-    if searchCity["Cod_Municipio"] == "":
-        return json.dumps({"error":"Digite o código de um município"}),400
-    
-    if searchCity["UF"] == "":
-        return json.dumps({"error":"Digie uma UF"}),400
-
     populationDF = pd.read_csv(diretorio+"/Dataset/População.csv", sep = ",")
 
     UFDataset = populationDF.query("UF == '"+searchCity["UF"]+"'").reset_index(drop = True)
@@ -169,21 +116,9 @@ def population():
     if searchBool == False:
         return json.dumps({"error":"A cidade digitada não foi encontrada"}),404
 
-@searchBP.route("/city-image",methods = ["POST"])
-def imagesCity():
-    searchCity = request.get_json(force=True)
-
-    try:
-        searchCity["cidade"]
-    except:
-        return json.dumps({"error":"JSON mal formatado"}),400
-
-    searchCity["cidade"] = searchCity["cidade"].strip()
-
-    if searchCity["cidade"] == "":
-        return json.dumps({"error":"Digite o nome de um município"}),400
-    
-    search = searchCity["cidade"]
+@searchBP.route("/city-image/<cidade>",methods = ["GET"])
+def imagesCity(cidade):
+    search = cidade
 
     imageLink = requests.get(f"https://serpapi.com/search.json?engine=google&q=Imagem+de+"+search+"&location=Brazil&google_domain=google.com.br&gl=br&hl=pt&api_key="+API_KEY)
 
@@ -201,21 +136,9 @@ def imagesCity():
     return json.dumps({"success":sendImage}),200
 
 
-@searchBP.route("/weather", methods = ["POST"])
-def weather():
-    searchCity = request.get_json(force=True)
-
-    try:
-        searchCity["cidade"]
-    except:
-        return json.dumps({"error":"JSON mal formatado"}),400
-
-    searchCity["cidade"] = searchCity["cidade"].strip()
-
-    if searchCity["cidade"] == "":
-        return json.dumps({"error":"Digite o nome de um município"}),400
-    
-
+@searchBP.route("/weather/<cidade>", methods = ["GET"])
+def weather(cidade):
+    searchCity = {"cidade":cidade}
     try:
         weather = requests.get("https://serpapi.com/search.json?engine=google&q=Tempo+"+searchCity["cidade"]+"&location=Brazil&google_domain=google.com&gl=br&hl=pt-br&device=desktop&api_key=c1d6039b74a493383fd998725a89b7ac2a331ebc23d4aaeba94700b0b8dc0c1a")
         weatherResponse = weather.json()
@@ -226,23 +149,9 @@ def weather():
     except:
         return json.dumps({"error":"O clima dessa cidade não foi encontrado"})
 
-@searchBP.route("/safety",methods = ["POST"])
-def safety():
-    city = request.get_json(force=True)
-    try:
-        city["cod_mun"]
-        city["UF"]
-    except:
-        return json.dumps({"error":"JSON mal formatado"}),400
-
-    city["cod_mun"] = city["cod_mun"].strip()
-    city["UF"] = city["UF"].strip()
-
-    if city["cod_mun"] == "":
-        return json.dumps({"error":"Digite o código de um município"}),400
-    
-    if city["UF"] == "":
-        return json.dumps({"error":"Digite o UF"}),400
+@searchBP.route("/safety/<UF>/<cod_mun>",methods = ["GET"])
+def safety(UF, cod_mun):
+    city = {"UF":UF,"cod_mun":cod_mun}
     
 
     def tratar_dados_pop_ibge_est(diretorio):
