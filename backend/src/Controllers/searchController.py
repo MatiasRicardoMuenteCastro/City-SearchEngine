@@ -100,7 +100,7 @@ def events():
     
     return json.dumps(jsonReturn),200
 
-@searchBP.route("/places",methods = ["GET"])
+@searchBP.route("/places",methods = ["POST"])
 def places():
     searchCity = request.get_json(force = True)
     searchLocal = request.get_json(force = True)
