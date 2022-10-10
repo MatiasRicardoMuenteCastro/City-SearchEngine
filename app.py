@@ -12,5 +12,5 @@ cors = CORS(app, resources = {r'*':{'origins':allowed_domain}})
 
 app.register_blueprint(searchBP)
 
-app.run(host = "0.0.0.0",port = port)
+app.run(port = port)
 
