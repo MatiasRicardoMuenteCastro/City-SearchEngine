@@ -16,6 +16,10 @@ API_KEY = "c1d6039b74a493383fd998725a89b7ac2a331ebc23d4aaeba94700b0b8dc0c1a"
 
 searchBP = Blueprint('search',__name__)
 
+@searchBP.route("/",methods = ["GET"])
+def hello():
+    return "<h1>I'm alive</h1>"
+
 @searchBP.route("/search/<UF>/<cidade>",methods = ["GET"])
 def searcEngine(UF,cidade):
 
