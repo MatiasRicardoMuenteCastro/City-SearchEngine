@@ -21,7 +21,7 @@ def searcEngine(UF,cidade):
 
     searchCity = {"UF":UF,"cidade":cidade}
 
-    municipiosDF = pd.read_excel(diretorio+"/Dataset/Municipios.xlsx")
+    municipiosDF = pd.read_excel(diretorio+"\src\Dataset\Municipios.xlsx")
     
     UFDataset = municipiosDF.query("UF == '"+searchCity["UF"]+"'").reset_index(drop = True)
 

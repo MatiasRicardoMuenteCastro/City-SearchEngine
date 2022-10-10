@@ -1,4 +1,4 @@
-from Controllers.searchController import searchBP
+from src.Controllers.searchController import searchBP
 
 from flask import Flask
 from flask_cors import CORS
