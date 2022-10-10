@@ -2,6 +2,7 @@ from src.Controllers.searchController import searchBP
 
 from flask import Flask
 from flask_cors import CORS
+from waitress import serve
 import os
 
 allowed_domain = '*'
@@ -12,5 +13,6 @@ cors = CORS(app, resources = {r'*':{'origins':allowed_domain}})
 
 app.register_blueprint(searchBP)
 
-app.run(port = port)
+serve(app, host = "0.0.0.0",port = port)
+#app.run(port = port)
 
