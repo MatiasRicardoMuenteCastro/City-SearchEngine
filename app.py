@@ -9,9 +9,10 @@ allowed_domain = '*'
 port = int(os.environ.get("PORT", 5000))
 
 app = Flask(__name__)
+
 cors = CORS(app, resources = {r'*':{'origins':allowed_domain}})
 
 app.register_blueprint(searchBP)
 
-app.run(port = port)
-
+#app.run(debug = False, port = port)
+serve(app.wsgi_app, host = '0.0.0.0', port = port)
