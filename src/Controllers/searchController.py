@@ -109,7 +109,10 @@ def population(UF,Cod_Municipio):
     line = 0
     searchBool = False
 
-    Cod_Muni = int(searchCity["Cod_Municipio"])
+    try:
+        Cod_Muni = int(searchCity["Cod_Municipio"])
+    except:
+        return json.dumps({"error":"Código da cidade inválido"}),400
 
     for i in UFDataset["COD. MUNIC"]:
         if i == Cod_Muni:
@@ -119,7 +122,7 @@ def population(UF,Cod_Municipio):
         line = line+1
     
     if searchBool == False:
-        return json.dumps({"error":"A cidade digitada não foi encontrada"}),404
+        return json.dumps({"error":"O Código da cidade não foi encontrado"}),404
 
 @searchBP.route("/city-image/<cidade>",methods = ["GET"])
 def imagesCity(cidade):
