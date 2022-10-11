@@ -98,7 +98,7 @@ def population(UF,Cod_Municipio):
 
     searchCity = {"UF":UF, "Cod_Municipio": Cod_Municipio}
     
-    populationDF = pd.read_csv(diretorio+"/Dataset/População.csv", sep = ",")
+    populationDF = pd.read_csv("https://drive.google.com/uc?export=download&id=1RKTar8Crq8fWRspuVJznCl79YX_689nz", sep = ",")
 
     UFDataset = populationDF.query("UF == '"+searchCity["UF"]+"'").reset_index(drop = True)
 
