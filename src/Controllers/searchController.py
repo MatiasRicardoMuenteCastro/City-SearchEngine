@@ -152,7 +152,7 @@ def weather(cidade):
     
         return weatherReturn,200
     except:
-        return json.dumps({"error":"O clima dessa cidade não foi encontrado"})
+        return json.dumps({"error":"O clima dessa cidade não foi encontrado"}),404
 
 @searchBP.route("/safety/<UF>/<cod_mun>",methods = ["GET"])
 def safety(UF, cod_mun):
