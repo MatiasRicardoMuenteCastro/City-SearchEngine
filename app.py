@@ -14,5 +14,5 @@ cors = CORS(app, resources = {r'*':{'origins':allowed_domain}})
 
 app.register_blueprint(searchBP)
 
-#app.run(debug = False, port = port)
+#app.run(debug = True, port = port)
 serve(app.wsgi_app, host = '0.0.0.0', port = port)

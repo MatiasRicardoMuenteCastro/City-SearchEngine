@@ -1,9 +1,10 @@
-from flask import Blueprint,request
+from flask import Blueprint
 from unidecode import unidecode
 import pandas as pd
 import numpy as np
 import requests
 import difflib
+import urllib
 import random
 import string 
 import xlrd
@@ -159,8 +160,9 @@ def safety(UF, cod_mun):
     
 
     def tratar_dados_pop_ibge_est(diretorio):
-        caminho = (r'' + diretorio + '\Dataset\Populacao.xls')
-        dados_pop = xlrd.open_workbook(caminho)
+        link = "https://drive.google.com/uc?export=download&id=1fw_L5GWlflXJTkiGvjZMNlspaiRiX73E"
+        file_name,headers = urllib.request.urlretrieve(link)
+        dados_pop = xlrd.open_workbook(file_name)
         dados_pop.sheet_names()
         dataset_pop_mun = pd.read_excel(
             dados_pop, engine='xlrd', sheet_name=dados_pop.sheet_names()[1])
@@ -185,7 +187,7 @@ def safety(UF, cod_mun):
     dataset_pop_tratado = tratar_dados_pop_ibge_est(diretorio=diretorio)
 
     def tratar_dados_mortalidade(diretorio, dataset_pop):
-        dataset_mort =  pd.read_csv(diretorio + '\Dataset\Mortalidade.csv', sep = ";", encoding='iso-8859-1', skiprows= 4, nrows=3739)
+        dataset_mort =  pd.read_csv("https://drive.google.com/uc?export=download&id=1Hij-kMlnsT4NcdtOt08E9Qac6KJZBZvm", sep = ";", encoding='iso-8859-1', skiprows= 4, nrows=3739)
         dataset_mort['Código Município'] = dataset_mort.Município.str.split("(\d+)", expand= True)[1]
         dataset_mort['Município'] = dataset_mort.Município.str.replace(r'(\d+)', '', regex= True)
         dataset_mort['Código UF'] = dataset_mort['Código Município'].str[:2]
