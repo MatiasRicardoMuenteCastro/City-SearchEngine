@@ -31,7 +31,7 @@ def searcEngine(UF,cidade):
     UFDataset = municipiosDF.query("UF == '"+searchCity["UF"]+"'").reset_index(drop = True)
 
     if UFDataset.shape[0] == 0:
-        return json.dumps({"error":"Municipio não encontrado"}),404
+        return json.dumps({"error":"UF não encontrado"}),404
 
     cityUser = searchCity["cidade"]
 
