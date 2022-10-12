@@ -148,7 +148,7 @@ def imagesCity(cidade):
 def weather(cidade):
     searchCity = {"cidade":cidade}
     try:
-        weather = requests.get("https://serpapi.com/search.json?engine=google&q=Tempo+"+searchCity["cidade"]+"&location=Brazil&google_domain=google.com&gl=br&hl=pt-br&device=desktop&api_key=c1d6039b74a493383fd998725a89b7ac2a331ebc23d4aaeba94700b0b8dc0c1a")
+        weather = requests.get("https://serpapi.com/search.json?engine=google&q=Tempo+"+searchCity["cidade"]+"&location=Brazil&google_domain=google.com&gl=br&hl=pt-br&device=desktop&api_key="+API_KEY)
         weatherResponse = weather.json()
 
         weatherReturn = {"forecast":weatherResponse["answer_box"]["forecast"],"date":weatherResponse["answer_box"]["date"],"humidity":weatherResponse["answer_box"]["humidity"],"location":weatherResponse["answer_box"]["location"],"temperature":weatherResponse["answer_box"]["temperature"],"thumbnail":weatherResponse["answer_box"]["thumbnail"],"type":weatherResponse["answer_box"]["type"],"unit":weatherResponse["answer_box"]["unit"],"weather":weatherResponse["answer_box"]["weather"],"wind":weatherResponse["answer_box"]["wind"]}
