@@ -156,6 +156,11 @@ def weather(cidade):
         return weatherReturn,200
     except:
         return json.dumps({"error":"O clima dessa cidade não foi encontrado"}),404
+"""
+Zona de perigo, por favor afaste-se  ---> Em observação (ーー゛)
+
+
+
 
 @searchBP.route("/safety/<UF>/<cod_mun>",methods = ["GET"])
 def safety(UF, cod_mun):
@@ -241,5 +246,5 @@ def safety(UF, cod_mun):
 
     response = json.dumps({"ranking_mortalidade_nacional":str(ranking_nacional__mun),"ranking_mortalidade_estadual":str(ranking_estadual__mun),"média":str(situacao)})
     return response,200
-
+"""
 
