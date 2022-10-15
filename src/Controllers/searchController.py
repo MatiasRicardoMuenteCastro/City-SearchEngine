@@ -13,7 +13,7 @@ import os
 
 diretorio = os.getcwd()
 
-API_KEY = "43579163f18d93076f7080222e53e427b05a6e6d42f34f7a4026d77562a055f2"
+API_KEY = "9b6a3807991240c07ccb2d1c93d0b23ee6d4b33c8c2cb32fc2e79e707f982572"
 
 searchBP = Blueprint('search',__name__)
 
@@ -105,7 +105,6 @@ def population(UF,Cod_Municipio):
 
     if UFDataset.shape[0] == 0:
         return json.dumps({"error":"Estado não encontrado"}),404
-    
     line = 0
     searchBool = False
 
@@ -123,12 +122,13 @@ def population(UF,Cod_Municipio):
     
     if searchBool == False:
         return json.dumps({"error":"O Código da cidade não foi encontrado"}),404
+    
 
 @searchBP.route("/city-image/<cidade>",methods = ["GET"])
 def imagesCity(cidade):
     search = cidade
 
-    imageLink = requests.get(f"https://serpapi.com/search.json?engine=google&q=Imagem+de+"+search+"&location=Brazil&google_domain=google.com.br&gl=br&hl=pt&api_key="+API_KEY)
+    imageLink = requests.get(f"https://serpapi.com/search.json?engine=google&q=Imagem+da+cidade+"+search+"&location=Brazil&google_domain=google.com.br&gl=br&hl=pt&api_key="+API_KEY)
 
     imageResponse = imageLink.json()
 
