@@ -13,7 +13,7 @@ import os
 
 diretorio = os.getcwd()
 
-API_KEY = "c1d6039b74a493383fd998725a89b7ac2a331ebc23d4aaeba94700b0b8dc0c1a"
+API_KEY = "d92821bc3c16e4e529c6acd1e19fb73a9a2d5bb64b3a70cb2a91b5158fc36ad9"
 
 searchBP = Blueprint('search',__name__)
 
