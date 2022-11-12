@@ -13,7 +13,7 @@ import os
 
 diretorio = os.getcwd()
 
-API_KEY = "d92821bc3c16e4e529c6acd1e19fb73a9a2d5bb64b3a70cb2a91b5158fc36ad9"
+API_KEY = "dc090f8a3b6761861a87d9e165e4f1bbd22cfcf577ca8a073110ac770b8fbca1"
 
 searchBP = Blueprint('search',__name__)
 
@@ -124,23 +124,21 @@ def population(UF,Cod_Municipio):
         return json.dumps({"error":"O Código da cidade não foi encontrado"}),404
     
 
-@searchBP.route("/city-image/<cidade>",methods = ["GET"])
-def imagesCity(cidade):
-    search = cidade
+@searchBP.route("/city-image/<cidade>/<UF>",methods = ["GET"])
+def imagesCity(cidade,UF):
+    search = cidade+"+"+UF
 
-    imageLink = requests.get(f"https://serpapi.com/search.json?engine=google&q=Imagem+da+cidade+"+search+"&location=Brazil&google_domain=google.com.br&gl=br&hl=pt&api_key="+API_KEY)
+    imageLink = requests.get(f"https://serpapi.com/search.json?engine=google&q=Imagem+Municipio+de+"+search+"&google_domain=google.com&tbm=isch&ijn=0&device=desktop&api_key="+API_KEY)
 
     imageResponse = imageLink.json()
 
     if imageResponse.get("error") != None:
         return json.dumps({"error":"Não foi encontrada nenhuma imagem"}),404
 
-    image = imageResponse["inline_images"]
-        
-    randomImage = random.randrange(0,len(image))
-
-    sendImage = image[randomImage]["original"]
-
+    image = imageResponse["images_results"]
+    selectImage = image[:10]
+    randomImage = random.randrange(0,len(selectImage))
+    sendImage = selectImage[randomImage]["original"]
     return json.dumps({"success":sendImage}),200
 
 
