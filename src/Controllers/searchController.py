@@ -124,9 +124,9 @@ def population(UF,Cod_Municipio):
         return json.dumps({"error":"O Código da cidade não foi encontrado"}),404
     
 
-@searchBP.route("/city-image/<cidade>/<UF>",methods = ["GET"])
-def imagesCity(cidade,UF):
-    search = cidade+"+"+UF
+@searchBP.route("/city-image/<cidade>",methods = ["GET"])
+def imagesCity(cidade):
+    search = cidade
 
     imageLink = requests.get(f"https://serpapi.com/search.json?engine=google&q=Imagem+Municipio+de+"+search+"&google_domain=google.com&tbm=isch&ijn=0&device=desktop&api_key="+API_KEY)
 
